@@ -1,9 +1,10 @@
 package com.shabab.ar;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements
     private ArFragment arFragment;
     private Renderable model;
     private ViewRenderable viewRenderable;
-
     private String modelName;
 
     @Override
@@ -82,13 +82,14 @@ public class MainActivity extends AppCompatActivity implements
         if (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
             config.setDepthMode(Config.DepthMode.AUTOMATIC);
         }
+
+        config.setPlaneFindingMode(Config.PlaneFindingMode.HORIZONTAL);
     }
 
     @Override
     public void onViewCreated(ArSceneView arSceneView) {
         arFragment.setOnViewCreatedListener(null);
 
-        // Fine adjust the maximum frame rate
         arSceneView.setFrameRateFactor(SceneView.FrameRate.FULL);
     }
 
@@ -117,6 +118,11 @@ public class MainActivity extends AppCompatActivity implements
                     MainActivity activity = weakActivity.get();
                     if (activity != null) {
                         activity.viewRenderable = viewRenderable;
+                        View view = viewRenderable.getView();
+                        TextView textView = view.findViewById(R.id.objTitle);
+                        if (textView != null && modelName != null) {
+                            textView.setText(modelName);
+                        }
                     }
                 })
                 .exceptionally(throwable -> {
@@ -140,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements
         // Create the transformable model and add it to the anchor.
         TransformableNode model = new TransformableNode(arFragment.getTransformationSystem());
         model.setParent(anchorNode);
+
+        model.getScaleController().setMinScale(0.1f);  // Minimum scale
+        model.getScaleController().setMaxScale(1.0f);  // Maximum scale
+        model.setLocalScale(new Vector3(0.1f, 0.1f, 0.1f));
+
         model.setRenderable(this.model)
                 .animate(true).start();
         model.select();
