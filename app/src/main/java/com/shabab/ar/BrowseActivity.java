@@ -34,20 +34,20 @@ public class BrowseActivity extends AppCompatActivity {
         modelTable = findViewById(R.id.modelTable);
 
         String[][] models = {
-                {"Apple", "Ball"},
+                {"Alligator", "Bear"},
                 {"Cat", "Dog"},
-                {"Elephant", "Fish"},
-                {"Goat", "Hat"},
-                {"Ice_Cream", "Jug"},
-                {"Kite", "Lion"},
-                {"Monkey", "Nest"},
-                {"Orange", "Parrot"},
-                {"Queen", "Rabbit"},
-                {"Sun", "Tiger"},
-                {"Umbrella", "Van"},
-                {"Watch", "Xylophone"},
-                {"Yak", "Zebra"}
+                {"Elephant", "Frog"},
+                {"Giraffe", "Hare"},
+                {"Iguana", "Jaguar"},
+                {"Kangaroo", "Lion"},
+                {"Monkey", "Narwhal"},
+                {"Owl", "Penguin"},
+                {"Quetzalcoatlus", "Rabbit"},
+                {"Seal", "Tiger"},
+                {"Unicorn", "Vulture"},
+                {"Wolf", "Zebra"}
         };
+
 
         for (String[] modelPair : models) {
             addModelRow(modelPair[0], modelPair[1]);
@@ -57,21 +57,17 @@ public class BrowseActivity extends AppCompatActivity {
     private void addModelRow(String modelName1, String modelName2) {
         TableRow tableRow = new TableRow(this);
 
-        // Set TableRow LayoutParams to match parent width and wrap content height
         TableRow.LayoutParams params = new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT
         );
         tableRow.setLayoutParams(params);
 
-        // Add the first model view
         View modelView1 = createModelView(modelName1);
         tableRow.addView(modelView1);
 
-        // Add the second model view
         View modelView2 = createModelView(modelName2);
         tableRow.addView(modelView2);
 
-        // Add the TableRow to the TableLayout
         modelTable.addView(tableRow);
     }
 
@@ -82,7 +78,7 @@ public class BrowseActivity extends AppCompatActivity {
         modelLayout.setPadding(16, 16, 16, 16);
 
         ImageView imageView = new ImageView(this);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(500, 500));
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(450, 450));
         imageView.setImageResource(getResources().getIdentifier(modelName.toLowerCase(), "drawable", getPackageName()));
 
         TextView textView = new TextView(this);

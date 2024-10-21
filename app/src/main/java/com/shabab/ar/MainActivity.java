@@ -1,6 +1,7 @@
 package com.shabab.ar;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements
     private Renderable model;
     private ViewRenderable viewRenderable;
     private String modelName;
+    private MediaPlayer mediaPlayer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements
                         .commit();
             }
         }
+
+        try {
+            mediaPlayer = MediaPlayer.create(this, getResources().getIdentifier(modelName.toLowerCase() + "_sound", "raw", getPackageName()));
+        } catch (Exception e) {}
 
         loadModels();
     }
@@ -138,28 +145,42 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
-        // Create the Anchor.
         Anchor anchor = hitResult.createAnchor();
         AnchorNode anchorNode = new AnchorNode(anchor);
         anchorNode.setParent(arFragment.getArSceneView().getScene());
 
-        // Create the transformable model and add it to the anchor.
-        TransformableNode model = new TransformableNode(arFragment.getTransformationSystem());
-        model.setParent(anchorNode);
+        TransformableNode modelNode = new TransformableNode(arFragment.getTransformationSystem());
+        modelNode.setParent(anchorNode);
 
-        model.getScaleController().setMinScale(0.1f);  // Minimum scale
-        model.getScaleController().setMaxScale(1.0f);  // Maximum scale
-        model.setLocalScale(new Vector3(0.1f, 0.1f, 0.1f));
+        modelNode.setLocalScale(new Vector3(0.1f, 0.1f, 0.1f));
+        modelNode.getScaleController().setMinScale(0.05f);
+        modelNode.getScaleController().setMaxScale(1.0f);
 
-        model.setRenderable(this.model)
+        modelNode.setRenderable(this.model)
                 .animate(true).start();
-        model.select();
+        modelNode.select();
 
         Node titleNode = new Node();
-        titleNode.setParent(model);
+        titleNode.setParent(modelNode);
         titleNode.setEnabled(false);
         titleNode.setLocalPosition(new Vector3(0.0f, 1.0f, 0.0f));
         titleNode.setRenderable(viewRenderable);
         titleNode.setEnabled(true);
+
+        playSound();
+
+        modelNode.setOnTapListener((hitTestResult, motionEvent1) -> {
+            playSound();
+        });
+    }
+
+
+    private void playSound() {
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.seekTo(0);
+            }
+            mediaPlayer.start();
+        }
     }
 }

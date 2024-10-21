@@ -30,8 +30,8 @@ android {
 
 dependencies {
 
-    implementation "com.gorisse.thomas.sceneform:sceneform:1.23.0"
-    implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation libs.sceneform
+    implementation libs.sdp.android
 
     implementation libs.appcompat
     implementation libs.material
